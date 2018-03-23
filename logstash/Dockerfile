@@ -5,3 +5,5 @@ COPY logstash.conf /config-dir/logstash.conf
 
 # add templates
 COPY ./templates/ /config-dir/templates/
+COPY ./conf.d/ /config-dir/conf.d/
+COPY ./patterns/ /config-dir/patterns/

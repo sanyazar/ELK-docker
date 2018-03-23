@@ -1,5 +1,5 @@
 elasticsearch:
-   image: elasticsearch:2.2
+   image: elasticsearch
    restart: always
    log_opt:
       max-size: "10m"
@@ -15,14 +15,15 @@ logstash:
    log_opt:
       max-size: "10m"
       max-file: "10"
-   command: logstash -f /config-dir/logstash.conf
+   #command: logstash -f /config-dir/logstash.conf
    ports:
      - 5044:5044
+     - 5045:5045
    links:
      - elasticsearch
 
 kibana:
-   image: kibana:4.4
+   image: kibana
    restart: always
    log_opt:
       max-size: "10m"
