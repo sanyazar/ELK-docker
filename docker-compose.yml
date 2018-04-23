@@ -1,11 +1,13 @@
 elasticsearch:
-   image: elasticsearch
+   image: elasticsearch:5.6
    restart: always
    log_opt:
       max-size: "10m"
       max-file: "10"
    ports:
       - 9200:9200
+   environment:
+      - "ES_JAVA_OPTS=-Xms10g -Xmx10g"
    volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
 
@@ -15,10 +17,17 @@ logstash:
    log_opt:
       max-size: "10m"
       max-file: "10"
-   #command: logstash -f /config-dir/logstash.conf
+      #command: logstash -f /config-dir/logstash.conf
+   command: logstash -w 4 -b 2000 --http.host 0.0.0.0 -f /etc/logstash/conf.d
+   #command: logstash -w 4 -b 2000 --http.host 0.0.0.0 -f /etc/logstash/conf.d -l /var/log/logstash.log --log.level debug
    ports:
      - 5044:5044
      - 5045:5045
+     - 5049:5049
+     - 9600:9600
+       #- 5045:5045
+   environment:
+     - 'LS_OPTS="-w 4 -b 2000 --http.host 0.0.0.0"'
    links:
      - elasticsearch
 
@@ -41,3 +50,15 @@ curator:
       max-file: "10"
    links:
       - elasticsearch
+
+logstashexporter:
+   build: logstashexporter
+   restart: always
+   log_opt:
+      max-size: "10m"
+      max-file: "10"
+   ports:
+      - 9198:9198
+   links:
+     - logstash
+

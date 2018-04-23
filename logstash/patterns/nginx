@@ -1,0 +1,21 @@
+NGUSERNAME [a-zA-Z\.\@\-\+_%]+
+NGUSER %{NGUSERNAME}
+#NGINX_ACCESS %{IPORHOST:http_host} %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) %{QS:referrer} %{QS:agent} %{NUMBER:request_time:float} %{NUMBER:upstream_time:float}
+#NGINX_ACCESS %{IPORHOST:http_host} %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) %{QS:referrer} %{QS:agent} %{NUMBER:request_time:float} (?:%{NUMBER:upstream_time:float}|-)
+#NGINX_ACCESS %{IPORHOST:http_host} %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes_sent}|-) %{NUMBER:bytes_received} (?:"(?:%{URI:referrer}|-)"|%{QS:referrer}) %{QS:agent} %{NUMBER:request_time:float} (?:%{NUMBER:upstream_time:float}|-) %{IPORHOST:upstream_addr}
+#NGINX_ACCESS %{IPORHOST:http_host} - - %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"%{WORD:verb} %{NOTSPACE:request} HTTP/%{NUMBER:http_version}\" %{NUMBER:response} %{NUMBER:bytes} %{QS:http_referrer} %{NUMBER:request_time}
+
+NGINX_ACCESS_ANDR %{IPORHOST:http_host} %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} 
+
+#NGINX_ACCESS \[%{HTTPDATE:[nginx][access][time]}\] \"%{DATA:[nginx][access][target_host]}\" \"%{IPORHOST:[nginx][access][remote_ip]}\" \"%{DATA:[nginx][access][response_code]}\" \"%{NUMBER:[nginx][access][request_time]}\" \"%{DATA:[nginx][access][upstream_request_time]}\" \"%{NUMBER:[nginx][access][body_sent][bytes]}\" \"%{DATA:[nginx][access][url]}\" \"%{DATA:[nginx][access][referrer]}\"
+
+NGINX_ACCESS \[%{HTTPDATE:[nginx][access][time]}\] \"%{DATA:[nginx][access][target_host]}\" \"%{IPORHOST:[nginx][access][remote_ip]}\" \"%{DATA:[nginx][access][response_code]}\" \"%{NUMBER:[nginx][access][request_time]}\" \"%{DATA:[nginx][access][upstream_request_time]}\" \"%{NUMBER:[nginx][access][body_sent][bytes]}\" \"%{DATA:[nginx][access][method]} %{DATA:[nginx][access][url]} %{DATA:[nginx][access][http_version]}\" \"%{DATA:[nginx][access][referrer]}\"
+#NGINX_ACCESS \[%{HTTPDATE:[nginx][access][time]}\] \"%{DATA:[nginx][access][target_host]}\" \"%{IPORHOST:[nginx][access][remote_ip]}\" \"%{DATA:[nginx][access][response_code]}\" \"%{NUMBER:[nginx][access][request_time]}\" \"%{DATA:[nginx][access][upstream_request_time]}\" \"%{NUMBER:[nginx][access][body_sent][bytes]}\" \"%{DATA:[nginx][access][method]} %{DATA:[nginx][access][url]} HTTP\/%{DATA:[nginx][access][http_version]}\" \"%{DATA:[nginx][access][referrer]}\"
+
+NGINX_RESPONSE_CONTENT_TYPE %{IPORHOST:http_host} %{IPORHOST:clientip} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})\" %{NUMBER:response} %{GREEDYDATA:content.type}
+
+#NGINX_ERROR %{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, server: %{IPORHOST:server})(?:, request: %{QS:request})?(?:, upstream: \"%{URI:upstream}\")?(?:, host: %{QS:host})?(?:, referrer: \"%{URI:referrer}\"
+NGINX_ERROR %{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, request: %{QS:request})?(?:, upstream: \"%{URI:upstream}\")?(?:, host: %{QS:host})?(?:, referrer: \"%{URI:referrer}\")?(?:, server: %{IPORHOST:server}
+
+NGINX_REQUEST_TIME %{IPORHOST:client} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:req_type} \/%{NOTSPACE:url} %{NOTSPACE:httpver} %{NUMBER:response} %{NUMBER:bytes} \"%{NOTSPACE:referrer} \"%{GREEDYDATA:agent}"  "%{NUMBER:time}" "%{DATA:action}"
+NGINX_VARNISH_STATUS %{IPORHOST:client} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:req_type} \/%{NOTSPACE:url} %{NOTSPACE:httpver} %{NUMBER:response} %{NUMBER:bytes} \"%{NOTSPACE:referrer} \"%{GREEDYDATA:agent}" "%{NUMBER:time}" "%{DATA:cache_status}" "%{GREEDYDATA:ab_group}"
