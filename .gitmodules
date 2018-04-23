@@ -1,0 +1,3 @@
+[submodule "logstashexporter"]
+	path = logstashexporter
+	url = git://github.com/sanyazar/logstash_exporter.git
