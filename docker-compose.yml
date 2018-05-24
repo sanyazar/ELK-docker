@@ -7,7 +7,7 @@ elasticsearch:
    ports:
       - 9200:9200
    environment:
-      - "ES_JAVA_OPTS=-Xms10g -Xmx10g"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
    volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
 
